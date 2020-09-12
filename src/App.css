@@ -1,0 +1,13 @@
+* {
+  margin: 0;
+}
+
+.ig {
+  background-color: #fafafa;
+}
+.ig__header {
+  background-color: white;
+  padding: 20px;
+  border-bottom: 1px solid lightgrey;
+  object-fit: contain;
+}
