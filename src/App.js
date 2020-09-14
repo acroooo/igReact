@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Post from "./components/Post";
-import {
-  InputLabel,
-  Modal,
-  Button,
-  Input,
-} from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
+import { Modal, Button, Input } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { db, storage, auth } from "./firebase";
 
 function getModalStyle() {
@@ -23,10 +18,10 @@ function getModalStyle() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    position: 'absolute',
+    position: "absolute",
     width: 400,
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
+    border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
@@ -37,9 +32,10 @@ function App() {
   const [modalStyle] = useState(getModalStyle);
   const [posts, setPosts] = useState([]);
   const [open, setOpen] = useState(false);
-  const [username, setUsername] = useState(false);
-  const [password, setPassword] = useState(false);
-  const [email, setEmail] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -49,11 +45,11 @@ function App() {
       } else {
         setUser(null);
       }
-    })
+    });
 
     return () => {
       unsubscribe();
-    }
+    };
   }, [user, username]);
 
   useEffect(() => {
@@ -75,13 +71,53 @@ function App() {
       .then((authUser) => {
         return authUser.user.updateProfile({
           displayName: username,
-        })
+        });
       })
       .catch((error) => alert(error.message));
+
+      setOpen(false);
+  };
+
+  const signIn = (event) => {
+    event.preventDefault();
+
+    auth
+    .signInWithEmailAndPassword(email, password)
+    .catch((error) => alert(error.message))
+
+    setOpenSignIn(false);
   };
 
   return (
     <div className="ig">
+    <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
+        <div style={modalStyle} className={classes.paper}>
+          <form className="ig__signup">
+            <center>
+              <img
+                className="ig__headerImage"
+                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+                alt="logoIg"
+              />
+            </center>
+            <Input
+              placeholder="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              placeholder="contraseña"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button type="submit" onClick={signIn}>
+              Ingresar
+            </Button>
+          </form>
+        </div>
+      </Modal>
       <Modal open={open} onClose={() => setOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
           <form className="ig__signup">
@@ -92,8 +128,8 @@ function App() {
                 alt="logoIg"
               />
             </center>
-            <Input 
-              placeholder="username"
+            <Input
+              placeholder="usuario"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -105,13 +141,13 @@ function App() {
               onChange={(e) => setEmail(e.target.value)}
             />
             <Input
-              placeholder="password"
+              placeholder="contraseña"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <Button type="submit" onClick={signUp}>
-              Sign Up
+              Registrarse
             </Button>
           </form>
         </div>
@@ -124,12 +160,15 @@ function App() {
           alt="logoIg"
         />
       </div>
+
       {user ? (
         <Button onClick={() => auth.signOut()}>Cerrar sesión</Button>
       ) : (
-        <Button onClick={() => setOpen(true)}>Sign Up</Button>
+        <div className="ig__loginContainer">
+          <Button onClick={() => setOpenSignIn(true)}>Ingresar</Button>
+          <Button onClick={() => setOpen(true)}>Registrarse</Button>
+        </div>
       )}
-      
 
       {posts.map(({ id, post }) => (
         <Post
@@ -139,13 +178,6 @@ function App() {
           caption={post.caption}
         />
       ))}
-      <InputLabel>Usuario</InputLabel>
-      <input />
-      <InputLabel>Imagen</InputLabel>
-      <button>Subir</button>
-      <InputLabel>Caption</InputLabel>
-      <input />
-      <button>Enviar</button>
     </div>
   );
 }
