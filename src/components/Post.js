@@ -11,7 +11,7 @@ function Post({username, imgUrl, caption}) {
           alt="Persistent.Dev"
           src="/static/images/avatar/1.jpg"
         />
-        <h3>Username</h3>
+        <h3>{username}</h3>
         {/* Header: avatar + username*/}
       </div>
 
