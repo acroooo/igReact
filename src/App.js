@@ -4,6 +4,7 @@ import Post from "./components/Post";
 import { Modal, Button, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { db, storage, auth } from "./firebase";
+import ImageUpload from "./components/ImageUpload";
 
 function getModalStyle() {
   const top = 50;
@@ -33,9 +34,9 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [open, setOpen] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -75,22 +76,24 @@ function App() {
       })
       .catch((error) => alert(error.message));
 
-      setOpen(false);
+    setOpen(false);
   };
 
   const signIn = (event) => {
     event.preventDefault();
 
     auth
-    .signInWithEmailAndPassword(email, password)
-    .catch((error) => alert(error.message))
+      .signInWithEmailAndPassword(email, password)
+      .catch((error) => alert(error.message));
 
     setOpenSignIn(false);
   };
 
   return (
     <div className="ig">
-    <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
+
+      <ImageUpload />
+      <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
         <div style={modalStyle} className={classes.paper}>
           <form className="ig__signup">
             <center>
@@ -159,16 +162,15 @@ function App() {
           src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
           alt="logoIg"
         />
+        {user ? (
+          <Button onClick={() => auth.signOut()}>Cerrar sesión</Button>
+        ) : (
+          <div className="ig__loginContainer">
+            <Button onClick={() => setOpenSignIn(true)}>Ingresar</Button>
+            <Button onClick={() => setOpen(true)}>Registrarse</Button>
+          </div>
+        )}
       </div>
-
-      {user ? (
-        <Button onClick={() => auth.signOut()}>Cerrar sesión</Button>
-      ) : (
-        <div className="ig__loginContainer">
-          <Button onClick={() => setOpenSignIn(true)}>Ingresar</Button>
-          <Button onClick={() => setOpen(true)}>Registrarse</Button>
-        </div>
-      )}
 
       {posts.map(({ id, post }) => (
         <Post
