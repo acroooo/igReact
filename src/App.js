@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import Post from "./components/Post";
+import Post from "./Post";
 import { Modal, Button, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { db, storage, auth } from "./firebase";
-import ImageUpload from "./components/ImageUpload";
+import ImageUpload from "./ImageUpload";
 
 function getModalStyle() {
   const top = 50;
@@ -91,8 +91,11 @@ function App() {
 
   return (
     <div className="ig">
-
-      <ImageUpload />
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName}/>
+      ): (
+        <h3>Sorry, login into your account for upload</h3>
+      )}
       <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
         <div style={modalStyle} className={classes.paper}>
           <form className="ig__signup">
