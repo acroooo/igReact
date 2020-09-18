@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Button } from "@material-ui/core";
 import firebase from "firebase";
 import { storage, db } from "./firebase";
+import './ImageUpload.css';
 //Imports end
 
 //function ImageUpload Start
 //This function upload an image for the post with a caption
-function ImageUpload({username}) {
+function ImageUpload({ username }) {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -40,24 +41,25 @@ function ImageUpload({username}) {
           .ref("images")
           .child(image.name)
           .getDownloadURL()
-          .then(url => {
+          .then((url) => {
             //post inside db
             db.collection("posts").add({
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
               caption: caption,
               imageUrl: url,
-              username: username
+              username: username,
             });
             setProgress(0);
             setImage(null);
             setCaption("");
-          })
+          });
       }
-    )
+    );
   };
 
   return (
-    <div>
+    <div className="imageupload">
+      <progress value={progress} max="100" />
       <input
         text="text"
         placeholder="Texto de la imagen"

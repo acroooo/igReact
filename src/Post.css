@@ -1,8 +1,11 @@
 .post {
     max-width: 500px;
+    width: 500px;
     background-color: white;
     border: 1px solid lightgrey;
     margin-bottom: 45px;
+    display:flex;
+    flex-wrap: wrap;
 }
 
 .post__image {

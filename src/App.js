@@ -3,8 +3,9 @@ import "./App.css";
 import Post from "./Post";
 import { Modal, Button, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { db, storage, auth } from "./firebase";
+import { db, auth } from "./firebase";
 import ImageUpload from "./ImageUpload";
+import InstagramEmbed from 'react-instagram-embed';
 
 function getModalStyle() {
   const top = 50;
@@ -54,14 +55,16 @@ function App() {
   }, [user, username]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) => {
-      setPosts(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          post: doc.data(),
-        }))
-      );
-    });
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            post: doc.data(),
+          }))
+        );
+      });
   }, []);
 
   const signUp = (event) => {
@@ -91,11 +94,6 @@ function App() {
 
   return (
     <div className="ig">
-      {user?.displayName ? (
-        <ImageUpload username={user.displayName}/>
-      ): (
-        <h3>Sorry, login into your account for upload</h3>
-      )}
       <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
         <div style={modalStyle} className={classes.paper}>
           <form className="ig__signup">
@@ -174,8 +172,9 @@ function App() {
           </div>
         )}
       </div>
+        <div className="ig__poststyle">
 
-      {posts.map(({ id, post }) => (
+        {posts.map(({ id, post }) => (
         <Post
           key={id}
           username={post.username}
@@ -183,6 +182,14 @@ function App() {
           caption={post.caption}
         />
       ))}
+
+        </div>
+      
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName}/>
+      ): (
+        <h3>Sorry, login into your account for upload</h3>
+      )}
     </div>
   );
 }

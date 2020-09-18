@@ -4,6 +4,7 @@
 
 .ig {
   background-color: #fafafa;
+
 }
 .ig__header {
   display: flex;
@@ -17,4 +18,11 @@
 .ig__signup {
   display: flex;
   flex-direction: column;
+}
+.ig__poststyle{
+  display:flex;
+  justify-content: center;
+  padding: 20px;
+  flex-direction: column;
+  align-items: center;
 }
