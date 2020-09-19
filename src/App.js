@@ -5,7 +5,7 @@ import { Modal, Button, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { db, auth } from "./firebase";
 import ImageUpload from "./ImageUpload";
-import InstagramEmbed from 'react-instagram-embed';
+import InstagramEmbed from "react-instagram-embed";
 
 function getModalStyle() {
   const top = 50;
@@ -172,22 +172,37 @@ function App() {
           </div>
         )}
       </div>
-        <div className="ig__poststyle">
-
+      <div className="ig__poststyle">
+        <div className="ig__postleft">
         {posts.map(({ id, post }) => (
-        <Post
-          key={id}
-          username={post.username}
-          imgUrl={post.imageUrl}
-          caption={post.caption}
-        />
-      ))}
-
+          <Post
+            key={id}
+            username={post.username}
+            imgUrl={post.imageUrl}
+            caption={post.caption}
+          />
+        ))}
         </div>
-      
+        <div className="ig__postright">
+        <InstagramEmbed
+          url="https://www.instagram.com/p/CE6-UjvAOLp/"
+          maxWidth={320}
+          hideCaption={false}
+          containerTagName="div"
+          protocol=""
+          injectScript
+          onLoading={() => {}}
+          onSuccess={() => {}}
+          onAfterRender={() => {}}
+          onFailure={() => {}}
+        />
+        
+        </div>
+      </div>
+
       {user?.displayName ? (
-        <ImageUpload username={user.displayName}/>
-      ): (
+        <ImageUpload username={user.displayName} />
+      ) : (
         <h3>Sorry, login into your account for upload</h3>
       )}
     </div>
